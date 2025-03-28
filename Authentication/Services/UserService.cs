@@ -120,7 +120,6 @@ namespace Authentication.Services
             return ServiceResult<AppUserDTO>.Ok(returnUser!, "User retrieved successfully.");
         }
 
-        //Saknar en save av nya entiteten i denna metod. 
         public async Task<ServiceResult<IdentityResult>> UpdateUserAsync(EditAppUserForm formData)
         {
             var appUser = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == formData.Id);
