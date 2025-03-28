@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{615A2D39-CBDE-43EB-91B9-C9B5AF0A138A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication", "Authentication\Authentication.csproj", "{4196DF3F-BD35-4BE9-A3A2-988F98969176}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{86BE43EC-124B-4463-9D56-A9AFCB19EDAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{615A2D39-CBDE-43EB-91B9-C9B5AF0A138A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615A2D39-CBDE-43EB-91B9-C9B5AF0A138A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615A2D39-CBDE-43EB-91B9-C9B5AF0A138A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615A2D39-CBDE-43EB-91B9-C9B5AF0A138A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4196DF3F-BD35-4BE9-A3A2-988F98969176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4196DF3F-BD35-4BE9-A3A2-988F98969176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4196DF3F-BD35-4BE9-A3A2-988F98969176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4196DF3F-BD35-4BE9-A3A2-988F98969176}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86BE43EC-124B-4463-9D56-A9AFCB19EDAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86BE43EC-124B-4463-9D56-A9AFCB19EDAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86BE43EC-124B-4463-9D56-A9AFCB19EDAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86BE43EC-124B-4463-9D56-A9AFCB19EDAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03F0CBEB-85C6-4879-B2D1-2FC0B0540F5D}
+	EndGlobalSection
+EndGlobal
