@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Authentication.Contexts
 {
-    public class UserDbContext(DbContextOptions<UserDbContext> options) : IdentityDbContext<AppUser>(options)
+    public class UserDbContext(DbContextOptions<UserDbContext> options) : IdentityDbContext<AppUserEntity>(options)
     {
-        public DbSet<AppUserAddress> UserAddresses { get; set; }
+        public DbSet<AppUserAddressEntity> UserAddresses { get; set; }
     }
 }

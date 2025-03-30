@@ -2,9 +2,11 @@
 
 namespace Infrastructure.Models
 {
-    public class AddProjectForm
+    public class EditProjectForm
     {
-        public string? Image { get; set; }
+        [Required]
+        public string Id { get; set; } = null!;
+        public string? ImageUrl { get; set; }
 
         [Required]
         public string ProjectName { get; set; } = null!;
@@ -17,10 +19,11 @@ namespace Infrastructure.Models
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        [Required] 
+        [Required]
         public string ProjectOwnerId { get; set; } = null!;
         public decimal? Budget { get; set; }
 
-        
+        [Required]
+        public int StatusId { get; set; }
     }
 }

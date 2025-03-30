@@ -12,7 +12,7 @@ namespace Authentication.Handlers
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public string GenerateToken(AppUser appUser, string? role = null)
+        public string GenerateToken(AppUserEntity appUser, string? role = null)
         {
             try
             {

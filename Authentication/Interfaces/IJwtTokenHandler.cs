@@ -4,6 +4,6 @@ namespace Authentication.Interfaces
 {
     public interface IJwtTokenHandler
     {
-        string GenerateToken(AppUser appUser, string? role = null);
+        string GenerateToken(AppUserEntity appUser, string? role = null);
     }
 }

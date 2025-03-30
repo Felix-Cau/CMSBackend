@@ -4,6 +4,9 @@ using Authentication.Interfaces;
 using Authentication.Models;
 using Authentication.Services;
 using Infrastructure.Data.Contexts;
+using Infrastructure.Data.Repositories;
+using Infrastructure.Interfaces;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AlphaDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaDb")));
 builder.Services.AddDbContext<UserDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaUserDb")));
-builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddIdentity<AppUserEntity, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
 
 //DI stuff
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<RoleHandler>();
 builder.Services.AddTransient<IJwtTokenHandler, JwtTokenHandler>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+builder.Services.AddScoped<IStatusService, StatusService>();
 
 
 

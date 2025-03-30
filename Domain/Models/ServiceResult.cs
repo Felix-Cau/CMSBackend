@@ -23,7 +23,7 @@
         public static ServiceResult UnAuthorized(string? message = "Username or password is incorrect.") =>
             new() { Succeeded = false, StatusCode = 401, Message = message };
 
-        public static ServiceResult NotFound(AppUserDTO appUserDTO, string? message = "Not found") =>
+        public static ServiceResult NotFound(AppUserDto appUserDto, string? message = "Not found") =>
             new() { Succeeded = false, StatusCode = 404, Message = message };
 
         public static ServiceResult AlreadyExists(string? message = "Already exists") =>

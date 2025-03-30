@@ -10,10 +10,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Authentication.Services
 {
-    public class UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, IConfiguration configuration) : IUserService
+    public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, IConfiguration configuration) : IUserService
     {
-        private readonly UserManager<AppUser> _userManager = userManager;
-        private readonly SignInManager<AppUser> _signInManager = signInManager;
+        private readonly UserManager<AppUserEntity> _userManager = userManager;
+        private readonly SignInManager<AppUserEntity> _signInManager = signInManager;
         private readonly RoleHandler _roleHandler = roleHander;
         private readonly IJwtTokenHandler _tokenHandler = jwtTokenHandler;
         private readonly IConfiguration _configuration = configuration;
@@ -79,13 +79,13 @@ namespace Authentication.Services
             return ServiceResult.Failed();
         }
 
-        public async Task<ServiceResult<IEnumerable<AppUserDTO>>> GetAllUsersAsync()
+        public async Task<ServiceResult<IEnumerable<AppUserDto>>> GetAllUsersAsync()
         {
             var users = await _userManager.Users.Include(u => u.Address).ToListAsync();
             if (users == null || users.Count == 0)
-                return ServiceResult<IEnumerable<AppUserDTO>>.NotFound([], "Not Found");
+                return ServiceResult<IEnumerable<AppUserDto>>.NotFound([], "Not Found");
 
-            List<AppUserDTO> tempUserList = [];
+            List<AppUserDto> tempUserList = [];
 
             if (users.Count > 0)
             {
@@ -93,7 +93,7 @@ namespace Authentication.Services
                 {
                     var role = await _roleHandler.GetRoleAsync(user);
                     if (role is null)
-                        return ServiceResult<IEnumerable<AppUserDTO>>.Failed([], $"Could not fetch {user.Id}, {user.FirstName} {user.LastName} role from database and aborted");
+                        return ServiceResult<IEnumerable<AppUserDto>>.Failed([], $"Could not fetch {user.Id}, {user.FirstName} {user.LastName} role from database and aborted");
 
                     var appUser = UserFactory.ToModel(user, role);
                     tempUserList.Add(appUser!);
@@ -102,22 +102,22 @@ namespace Authentication.Services
 
             var userReturnList = tempUserList.AsEnumerable();
 
-            return ServiceResult<IEnumerable<AppUserDTO>>.Ok(userReturnList, "Users retrieved successfully.");
+            return ServiceResult<IEnumerable<AppUserDto>>.Ok(userReturnList, "Users retrieved successfully.");
         }
         
-        public async Task<ServiceResult<AppUserDTO>> GetUserByIdAsync(string id)
+        public async Task<ServiceResult<AppUserDto>> GetUserByIdAsync(string id)
         {
             var userResult = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == id);
             if (userResult == null)
-                return ServiceResult<AppUserDTO>.NotFound(new AppUserDTO(), "Not Found");
+                return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not Found");
 
             var role = await _roleHandler.GetRoleAsync(userResult!);
             if (role is null)
-                return ServiceResult<AppUserDTO>.Failed(new AppUserDTO(), "Could not get user role and aborted.");
+                return ServiceResult<AppUserDto>.Failed(new AppUserDto(), "Could not get user role and aborted.");
 
             var returnUser = UserFactory.ToModel(userResult!, role);
 
-            return ServiceResult<AppUserDTO>.Ok(returnUser!, "User retrieved successfully.");
+            return ServiceResult<AppUserDto>.Ok(returnUser!, "User retrieved successfully.");
         }
 
         public async Task<ServiceResult<IdentityResult>> UpdateUserAsync(EditAppUserForm formData)

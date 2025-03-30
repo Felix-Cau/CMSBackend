@@ -6,12 +6,12 @@ namespace Authentication.Factories
 {
     public class UserFactory
     {
-        public static AppUser? ToEntity(SignUpForm formData)
+        public static AppUserEntity? ToEntity(SignUpForm formData)
         {
             if (formData is null)
                 return null;
 
-            AppUser appUser = new()
+            AppUserEntity appUser = new()
             {
                 UserName = formData.Email,
                 FirstName = formData.FirstName,
@@ -19,19 +19,19 @@ namespace Authentication.Factories
                 Email = formData.Email,
             };
 
-            appUser.Address = new AppUserAddress()
+            appUser.Address = new AppUserAddressEntity()
             {
                 UserId = appUser.Id
             };
             return appUser;
         }
 
-        public static AppUserDTO? ToModel(AppUser appUser, string role)
+        public static AppUserDto? ToModel(AppUserEntity appUser, string role)
         {
             if (appUser is null)
                 return null;
 
-            AppUserDTO appUserDto = new()
+            AppUserDto appUserDto = new()
             {
                 Id = appUser.Id,
                 FirstName = appUser.FirstName,
@@ -45,12 +45,12 @@ namespace Authentication.Factories
             return appUserDto;
         }
 
-        public static AppUser? ToEntity(NewAppUserForm formData)
+        public static AppUserEntity? ToEntity(NewAppUserForm formData)
         {
             if (formData is null)
                 return null;
 
-            var appUser = new AppUser
+            var appUser = new AppUserEntity
             {
                 UserName = formData.Email,
                 Email = formData.Email,
@@ -60,7 +60,7 @@ namespace Authentication.Factories
                 PhoneNumber = formData.PhoneNumber
             };
 
-            appUser.Address = new AppUserAddress
+            appUser.Address = new AppUserAddressEntity
             {
                 UserId = appUser.Id,
                 Address = formData.Address,
@@ -70,7 +70,7 @@ namespace Authentication.Factories
             return appUser;
         }
 
-        public static AppUser? UpdateEntity(EditAppUserForm formData, AppUser oldUser)
+        public static AppUserEntity? UpdateEntity(EditAppUserForm formData, AppUserEntity oldUser)
         {
             if (formData is null)
                 return null;
@@ -91,17 +91,3 @@ namespace Authentication.Factories
         }
     }
 }
-
-//public class EditAppUserForm
-//{
-//    [Required]
-//    public string Id { get; set; } = null!;
-//    public string? FirstName { get; set; }
-//    public string? LastName { get; set; }
-//    public string? JobTitle { get; set; }
-//    public string? Email { get; set; }
-//    public string Role { get; set; } = null!;
-//    public string? Address { get; set; }
-//    public string? PostalCode { get; set; }
-//    public string? City { get; set; }
-//}

@@ -1,11 +1,13 @@
-﻿//namespace Infrastructure.Interfaces
-//{
-//    public interface IProjectService
-//    {
-//        Task<bool> CreateProjectAsync(AddProjectFormData formData, string defaultStatus = "started");
-//        Task<bool> DeleteProjectAsync(string id);
-//        Task<Project> GetProjectByIdAsync(string id);
-//        Task<IEnumerable<Project>> GetProjectsAsync();
-//        Task<bool> UpdateProjectAsync(EditProjectFormData formData);
-//    }
-//}
+﻿using Infrastructure.Models;
+
+namespace Infrastructure.Interfaces
+{
+    public interface IProjectService
+    {
+        Task<bool> CreateProjectAsync(AddProjectForm formData, string defaultStatus = "started");
+        Task<bool> DeleteProjectAsync(string id);
+        Task<ProjectDto> GetProjectByIdAsync(string id);
+        Task<IEnumerable<ProjectDto>> GetProjectsAsync();
+        Task<bool> UpdateProjectAsync(EditProjectForm formData);
+    }
+}

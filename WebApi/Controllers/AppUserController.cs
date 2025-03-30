@@ -11,9 +11,9 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppUserController(UserManager<AppUser> userManager, IUserService userService, RoleHandler roleHandler) : ControllerBase
+    public class AppUserController(UserManager<AppUserEntity> userManager, IUserService userService, RoleHandler roleHandler) : ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly IUserService _userService = userService;
         private readonly RoleHandler _roleHandler = roleHandler;
 

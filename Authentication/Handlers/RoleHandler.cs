@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Authentication.Handlers
 {
-    public class RoleHandler(UserManager<AppUser> userManager)
+    public class RoleHandler(UserManager<AppUserEntity> userManager)
     {
-        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly UserManager<AppUserEntity> _userManager = userManager;
 
-        public async Task<IdentityResult> AddToRoleAsync(AppUser appUser, string role)
+        public async Task<IdentityResult> AddToRoleAsync(AppUserEntity appUser, string role)
         {
             var result = await _userManager.AddToRoleAsync(appUser, role);
             return result;
         }
 
-        public async Task<string?> GetRoleAsync(AppUser appUser)
+        public async Task<string?> GetRoleAsync(AppUserEntity appUser)
         {
             var roleList = await _userManager.GetRolesAsync(appUser);
             if (roleList.Count > 1)
@@ -23,7 +23,7 @@ namespace Authentication.Handlers
             return roleList.FirstOrDefault();
         }
 
-        public async Task<IdentityResult?> UpdateRoleAsync(AppUser appUser, string newRole)
+        public async Task<IdentityResult?> UpdateRoleAsync(AppUserEntity appUser, string newRole)
         {
             var oldRole = await GetRoleAsync(appUser);
             if (oldRole is null)
@@ -42,7 +42,7 @@ namespace Authentication.Handlers
             return null;
         }
 
-        public async Task<IdentityResult?> RemoveFromRoleAsync(AppUser appUser, string role)
+        public async Task<IdentityResult?> RemoveFromRoleAsync(AppUserEntity appUser, string role)
         {
             var removeResult = await _userManager.RemoveFromRoleAsync(appUser, role);
             if (removeResult.Succeeded)
@@ -51,7 +51,7 @@ namespace Authentication.Handlers
             return null;
         }
 
-        public async Task<IdentityResult?> RemoveFromRoleAsync(AppUser appUser)
+        public async Task<IdentityResult?> RemoveFromRoleAsync(AppUserEntity appUser)
         {
             var roleResult = await GetRoleAsync(appUser);
             if (roleResult is null)

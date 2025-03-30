@@ -6,10 +6,12 @@ namespace Domain.Models
     {
         [Required] 
         public string Email { get; set; } = null!;
-        [Required]
-        public string? FirstName { get; set; }
-        [Required]
-        public string? LastName { get; set; }
+
+        [Required] 
+        public string FirstName { get; set; } = null!;
+
+        [Required] 
+        public string LastName { get; set; } = null!;
         public string? PhoneNumber { get; set; }
         public string? JobTitle { get; set; }
         public string Role { get; set; } = null!;
