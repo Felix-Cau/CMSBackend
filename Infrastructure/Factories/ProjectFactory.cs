@@ -56,8 +56,7 @@ namespace Infrastructure.Factories
                     Description = entity.Description,
                     StartDate = entity.StartDate,
                     EndDate = entity.EndDate,
-                    ProjectOwnerId = appUser.Id,
-                    ProjectOwnerName = appUser.Name,
+                    ProjectOwner = appUser,
                     Budget = entity.Budget,
                     StatusId = entity.StatusId,
                     StatusName = entity.Status.StatusName
