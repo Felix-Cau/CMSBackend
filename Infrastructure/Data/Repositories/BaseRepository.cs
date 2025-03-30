@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using Infrastructure.Data.Contexts;
 
 namespace Infrastructure.Data.Repositories;
 
-public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>, IBaseRepository<TEntity> where TEntity : class
+public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
-    protected readonly DataContext _context;
+    protected readonly AlphaDbContext _context;
     protected readonly DbSet<TEntity> _dbSet;
 
-    protected BaseRepository(DataContext context)
+    protected BaseRepository(AlphaDbContext context)
     {
         _context = context;
         _dbSet = _context.Set<TEntity>();

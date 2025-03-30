@@ -7,7 +7,7 @@ namespace Infrastructure.Data.Entities
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string? Image { get; set; }
+        public string? ImageUrl { get; set; }
 
         public string ProjectName { get; set; } = null!;
 

@@ -3,11 +3,13 @@ using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
 using Authentication.Services;
+using Infrastructure.Data.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<AlphaDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaDb")));
 builder.Services.AddDbContext<UserDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaUserDb")));
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
 
