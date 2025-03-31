@@ -17,6 +17,8 @@ namespace WebApi.Controllers
         private readonly IUserService _userService = userService;
         private readonly RoleHandler _roleHandler = roleHandler;
 
+
+        //Fixa authentication/authorization.
         [HttpPost]
         [Route("signup")]
         public async Task<IActionResult> SignUp(SignUpForm form)

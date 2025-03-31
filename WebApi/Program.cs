@@ -2,6 +2,7 @@ using Authentication.Contexts;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
+using Authentication.Repositories;
 using Authentication.Services;
 using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 builder.Services.AddScoped<IStatusService, StatusService>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 
 
@@ -45,6 +47,7 @@ builder.Services.AddCors(x =>
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

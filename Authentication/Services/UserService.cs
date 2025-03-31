@@ -1,4 +1,5 @@
-﻿using Authentication.Factories;
+﻿using System.Security.Cryptography.X509Certificates;
+using Authentication.Factories;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
@@ -10,18 +11,18 @@ using Microsoft.Extensions.Configuration;
 
 namespace Authentication.Services
 {
-    public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, IConfiguration configuration) : IUserService
+    public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, IConfiguration configuration, IUsersRepository userRepository) : IUserService
     {
         private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly SignInManager<AppUserEntity> _signInManager = signInManager;
         private readonly RoleHandler _roleHandler = roleHander;
         private readonly IJwtTokenHandler _tokenHandler = jwtTokenHandler;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IUsersRepository _userRepository = userRepository;
 
 
         public async Task<ServiceResult> SignUpAsync(SignUpForm form)
         {
-
             var appUser = UserFactory.ToEntity(form);
 
             if (appUser is not null)
@@ -81,43 +82,18 @@ namespace Authentication.Services
 
         public async Task<ServiceResult<IEnumerable<AppUserDto>>> GetAllUsersAsync()
         {
-            var users = await _userManager.Users.Include(u => u.Address).ToListAsync();
-            if (users == null || users.Count == 0)
-                return ServiceResult<IEnumerable<AppUserDto>>.NotFound([], "Not Found");
-
-            List<AppUserDto> tempUserList = [];
-
-            if (users.Count > 0)
-            {
-                foreach (var user in users)
-                {
-                    var role = await _roleHandler.GetRoleAsync(user);
-                    if (role is null)
-                        return ServiceResult<IEnumerable<AppUserDto>>.Failed([], $"Could not fetch {user.Id}, {user.FirstName} {user.LastName} role from database and aborted");
-
-                    var appUser = UserFactory.ToModel(user, role);
-                    tempUserList.Add(appUser!);
-                }
-            }
-
-            var userReturnList = tempUserList.AsEnumerable();
-
-            return ServiceResult<IEnumerable<AppUserDto>>.Ok(userReturnList, "Users retrieved successfully.");
+            var result = await _userRepository.GetAllAsync(includes: user => user.Address);
+            return !result.Succeeded 
+                ? ServiceResult<IEnumerable<AppUserDto>>.NotFound([], "Could not fetch users.") 
+                : result;
         }
         
         public async Task<ServiceResult<AppUserDto>> GetUserByIdAsync(string id)
         {
-            var userResult = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == id);
-            if (userResult == null)
-                return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not Found");
-
-            var role = await _roleHandler.GetRoleAsync(userResult!);
-            if (role is null)
-                return ServiceResult<AppUserDto>.Failed(new AppUserDto(), "Could not get user role and aborted.");
-
-            var returnUser = UserFactory.ToModel(userResult!, role);
-
-            return ServiceResult<AppUserDto>.Ok(returnUser!, "User retrieved successfully.");
+            var result = await _userRepository.GetUserAsync(findByExpression: x => x.Id == id, includes: user => user.Address);
+            return !result.Succeeded
+                ? ServiceResult<AppUserDto>.NotFound(result.Result, "Could not fetch user.")
+                : result;
         }
 
         public async Task<ServiceResult<IdentityResult>> UpdateUserAsync(EditAppUserForm formData)
