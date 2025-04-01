@@ -60,6 +60,25 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         }
     }
 
+    public virtual async Task<bool> DeleteManyAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        var entity = await _table.Where(expression).ToListAsync();
+        if (entity == default)
+            return false;
+
+        try
+        {
+            _table.RemoveRange(entity);
+            await _context.SaveChangesAsync();
+            return !await _table.AnyAsync(expression);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
+    }
+
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync(bool orderByDescending = false, Expression<Func<TEntity, object>>? sortByExpression = null, 
         Expression<Func<TEntity, bool>>? filterByExpression = null, params Expression<Func<TEntity, object>>[] includes)

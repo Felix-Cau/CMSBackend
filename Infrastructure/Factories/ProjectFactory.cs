@@ -12,7 +12,7 @@ namespace Infrastructure.Factories
                 ? null
                 : new ProjectEntity
                 {
-                    ImageUrl = form.Image,
+                    ImageUrl = form.ImageUrl,
                     ProjectName = form.ProjectName,
                     ClientId = form.ClientId,
                     Description = form.Description,

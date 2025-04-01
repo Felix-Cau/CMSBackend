@@ -1,6 +1,5 @@
 ﻿using Authentication.Models;
 using Domain.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace Authentication.Factories
 {
@@ -26,25 +25,6 @@ namespace Authentication.Factories
             return appUser;
         }
 
-        public static AppUserDto? ToModel(AppUserEntity appUser, string role)
-        {
-            if (appUser is null)
-                return null;
-
-            AppUserDto appUserDto = new()
-            {
-                Id = appUser.Id,
-                FirstName = appUser.FirstName,
-                LastName = appUser.LastName,
-                JobTitle = appUser.JobTitle,
-                Role = role,
-                Address = appUser.Address!.Address,
-                PostalCode = appUser.Address.PostalCode,
-                City = appUser.Address.City
-            };
-            return appUserDto;
-        }
-
         public static AppUserEntity? ToEntity(NewAppUserForm formData)
         {
             if (formData is null)
@@ -68,6 +48,25 @@ namespace Authentication.Factories
                 City = formData.City
             };
             return appUser;
+        }
+
+        public static AppUserDto? ToModel(AppUserEntity appUser, string role)
+        {
+            if (appUser is null)
+                return null;
+
+            AppUserDto appUserDto = new()
+            {
+                Id = appUser.Id,
+                FirstName = appUser.FirstName,
+                LastName = appUser.LastName,
+                JobTitle = appUser.JobTitle,
+                Role = role,
+                Address = appUser.Address!.Address,
+                PostalCode = appUser.Address.PostalCode,
+                City = appUser.Address.City
+            };
+            return appUserDto;
         }
 
         public static AppUserEntity? UpdateEntity(EditAppUserForm formData, AppUserEntity oldUser)

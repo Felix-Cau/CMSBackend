@@ -4,7 +4,7 @@ namespace Infrastructure.Models
 {
     public class AddProjectForm
     {
-        public string? Image { get; set; }
+        public string? ImageUrl { get; set; }
 
         [Required]
         public string ProjectName { get; set; } = null!;

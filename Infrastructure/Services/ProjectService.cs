@@ -64,26 +64,22 @@ namespace Infrastructure.Services
                 filterByExpression: null, p => p.Client, p => p.Status);
             List<ProjectDto> tempProjectList = [];
 
-            try
+            foreach (var project in projectList)
             {
-                foreach (var project in projectList)
-                {
-                    var loadUserResult =
-                        await _userRepository.GetUserAsync(findByExpression: u => u.Id == project.ProjectOwnerId);
-                    var projectOwner = loadUserResult.Result;
+                var loadUserResult =
+                    await _userRepository.GetUserAsync(findByExpression: u => u.Id == project.ProjectOwnerId);
+                var projectOwner = loadUserResult.Result;
+                if (projectOwner is null)
+                    return ServiceResult<IEnumerable<ProjectDto>>.Failed([], "Internal server error");
 
-                    var projectDto = ProjectFactory.ToModel(project, projectOwner);
-                    tempProjectList.Add(projectDto);
-                }
+                var projectDto = ProjectFactory.ToModel(project, projectOwner);
+                tempProjectList.Add(projectDto);
+            }
 
-                IEnumerable<ProjectDto> returnList = tempProjectList.AsEnumerable();
-                return ServiceResult<IEnumerable<ProjectDto>>.Ok(returnList, "Ok");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return ServiceResult<IEnumerable<ProjectDto>>.Failed([], "Failed");
-            }
+            IEnumerable<ProjectDto> returnList = tempProjectList.AsEnumerable();
+            return (returnList is not null)
+                ? ServiceResult<IEnumerable<ProjectDto>>.Ok(returnList, "Ok")
+                : ServiceResult<IEnumerable<ProjectDto>>.Failed([], "Failed");
         }
 
         public async Task<ServiceResult> UpdateProjectAsync(EditProjectForm formData)

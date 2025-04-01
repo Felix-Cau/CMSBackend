@@ -6,8 +6,8 @@ namespace Infrastructure.Data.Entities
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string? ImageUrl { get; set; }
         public string ClientName { get; set; } = null!;
-
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
         public bool IsActive { get; set; }

@@ -4,6 +4,7 @@ using Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AlphaDbContext))]
-    partial class AlphaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401111212_AddedImageUrlToClientEntity")]
+    partial class AddedImageUrlToClientEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +44,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("ClientAddressEntity", (string)null);
+                    b.ToTable("ClientAddressEntity");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientContactInformationEntity", b =>
@@ -61,7 +64,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("ClientContactInformationEntity", (string)null);
+                    b.ToTable("ClientContactInformationEntity");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientEntity", b =>
@@ -87,7 +90,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ProjectEntity", b =>
@@ -134,7 +137,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.StatusEntity", b =>
@@ -151,7 +154,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses", (string)null);
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientAddressEntity", b =>
