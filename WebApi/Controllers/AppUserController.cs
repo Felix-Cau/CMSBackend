@@ -80,8 +80,8 @@ namespace WebApi.Controllers
             var result = await _userService.GetAllUsersAsync();
             return result.StatusCode switch
             {
-                200 => Ok(result),
-                404 => NotFound(result),
+                200 => Ok(result.Result),
+                404 => NotFound(),
                 500 => Problem(),
                 _ => BadRequest()
             };
@@ -93,8 +93,8 @@ namespace WebApi.Controllers
             var result = await _userService.GetUserByIdAsync(id);
             return result.StatusCode switch
             {
-                200 => Ok(result),
-                404 => NotFound(result),
+                200 => Ok(result.Result),
+                404 => NotFound(),
                 500 => Problem(result.Message),
                 _ => BadRequest()
             };
@@ -109,7 +109,7 @@ namespace WebApi.Controllers
             var result = await _userService.UpdateUserAsync(formData);
             return result.StatusCode switch
             {
-                200 => Ok(result),
+                200 => Ok(),
                 500 => Problem(result.Message),
                 _ => BadRequest()
             };
@@ -121,7 +121,7 @@ namespace WebApi.Controllers
             var result = await _userService.DeleteUserAsync(id);
             return result.StatusCode switch
             {
-                200 => Ok(result),
+                200 => Ok(),
                 500 => Problem(result.Message),
                 _ => BadRequest()
             };

@@ -20,7 +20,5 @@ namespace Infrastructure.Models
         [Required] 
         public string ProjectOwnerId { get; set; } = null!;
         public decimal? Budget { get; set; }
-
-        
     }
 }
