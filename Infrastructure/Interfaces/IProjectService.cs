@@ -1,13 +1,14 @@
-﻿using Infrastructure.Models;
+﻿using Domain.Models;
+using Infrastructure.Models;
 
 namespace Infrastructure.Interfaces
 {
     public interface IProjectService
     {
-        Task<bool> CreateProjectAsync(AddProjectForm formData, string defaultStatus = "started");
-        Task<bool> DeleteProjectAsync(string id);
-        Task<ProjectDto> GetProjectByIdAsync(string id);
-        Task<IEnumerable<ProjectDto>> GetProjectsAsync();
-        Task<bool> UpdateProjectAsync(EditProjectForm formData);
+        Task<ServiceResult> CreateProjectAsync(AddProjectForm formData, string defaultStatus = "STARTED");
+        Task<ServiceResult> DeleteProjectAsync(string id);
+        Task<ServiceResult<ProjectDto>> GetProjectByIdAsync(string id);
+        Task<ServiceResult<IEnumerable<ProjectDto>>> GetProjectsAsync();
+        Task<ServiceResult> UpdateProjectAsync(EditProjectForm formData);
     }
 }

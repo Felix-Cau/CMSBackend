@@ -40,8 +40,11 @@
         public static ServiceResult<T> Ok(T result, string? message) =>
             new() { Succeeded = true, StatusCode = 200, Message = message, Result = result };
 
+        public static ServiceResult<T> BadRequest(T result, string? message) =>
+            new() { Succeeded = false, StatusCode = 400, Message = message };
+
         public static ServiceResult<T> NotFound(T result, string? message) =>
-            new() { Succeeded = false, StatusCode = 500, Message = message, Result = result};
+            new() { Succeeded = false, StatusCode = 404, Message = message, Result = result};
 
         public static ServiceResult<T> Failed(T result, string? message) =>
             new() { Succeeded = false, StatusCode = 500, Message = message, Result = result };
