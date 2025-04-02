@@ -1,17 +1,14 @@
-﻿using Authentication.Handlers;
-using Authentication.Interfaces;
+﻿using Authentication.Interfaces;
 using Authentication.Models;
 using Domain.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppUsersController(UserManager<AppUserEntity> userManager, IUserService userService) : ControllerBase
+    public class UsersController(UserManager<AppUserEntity> userManager, IUserService userService) : ControllerBase
     {
         private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly IUserService _userService = userService;
