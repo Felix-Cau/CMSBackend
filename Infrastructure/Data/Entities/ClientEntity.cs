@@ -11,8 +11,8 @@ namespace Infrastructure.Data.Entities
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
         public bool IsActive { get; set; }
-        public virtual ClientContactInformationEntity ContactInformation { get; set; } = null!;
-        public virtual ClientAddressEntity ClientAddress { get; set; } = null!;
+        public virtual ClientContactInformationEntity? ContactInformation { get; set; }
+        public virtual ClientAddressEntity? ClientAddress { get; set; }
 
         public virtual ICollection<ProjectEntity> Projects { get; set; } = [];
     }

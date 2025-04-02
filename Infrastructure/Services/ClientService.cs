@@ -83,10 +83,7 @@ namespace Infrastructure.Services
         {
             var deleteClientResult = await _clientRepository.DeleteAsync(x => x.Id == id);
 
-            //Ska jag implementera detta? Eller "silent delete" och sätta isActive till false? Mer logik dock.
-            var deleteProjectsResult = await _projectRepository.DeleteManyAsync(x => x.ClientId == id);
-
-            return (deleteClientResult && deleteProjectsResult)
+            return (deleteClientResult)
                 ? ServiceResult.Ok("Client successfully deleted.")
                 : ServiceResult.Failed();
         }

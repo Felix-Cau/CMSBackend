@@ -11,11 +11,10 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppUsersController(UserManager<AppUserEntity> userManager, IUserService userService, RoleHandler roleHandler) : ControllerBase
+    public class AppUsersController(UserManager<AppUserEntity> userManager, IUserService userService) : ControllerBase
     {
         private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly IUserService _userService = userService;
-        private readonly RoleHandler _roleHandler = roleHandler;
 
 
         //Fixa authentication/authorization.
