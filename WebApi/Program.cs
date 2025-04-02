@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using WebApi.Extensions.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,9 @@ app.UseSwaggerUI(x =>
 });
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<DefaultAPiKeyMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
