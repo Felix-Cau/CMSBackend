@@ -8,9 +8,8 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(UserManager<AppUserEntity> userManager, IUserService userService) : ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
-        private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly IUserService _userService = userService;
 
 
