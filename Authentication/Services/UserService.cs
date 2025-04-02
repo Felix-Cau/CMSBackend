@@ -27,6 +27,10 @@ namespace Authentication.Services
 
             if (appUser is not null)
             {
+                var exists = await _userRepository.ExistsAsync(form);
+                if (exists)
+                    return ServiceResult.AlreadyExists();
+
                 form.Role = "Admin";
 
                 var result = await _userManager.CreateAsync(appUser, form.Password);
@@ -60,6 +64,10 @@ namespace Authentication.Services
 
         public async Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form)
         {
+            var exists = await _userRepository.ExistsAsync(form);
+            if (exists)
+                return ServiceResult.AlreadyExists();
+
             var appUser = UserFactory.ToEntity(form);
 
             if (appUser is not null)

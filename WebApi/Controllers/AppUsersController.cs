@@ -25,13 +25,11 @@ namespace WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(form);
 
-            if (await _userManager.Users.AnyAsync(x => x.Email == form.Email))
-                return Conflict(new { error = "User already exists." });
-
             var result = await _userService.SignUpAsync(form);
             return result.StatusCode switch
             {
                 201 => Created(),
+                409 => Conflict(),
                 _ => StatusCode(500, result.Message)
             };
         }
@@ -62,13 +60,11 @@ namespace WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(form);
 
-            if (await _userManager.Users.AnyAsync(x => x.Email == form.Email))
-                return Conflict(new { error = "User already exists." });
-
             var result = await _userService.CreateUserAsAdminAsync(form);
             return result.StatusCode switch
             {
                 201 => Created(),
+                409 => Conflict(),
                 _ => StatusCode(500, result.Message)
             };
         }

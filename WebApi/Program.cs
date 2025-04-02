@@ -1,3 +1,4 @@
+using System.Text;
 using Authentication.Contexts;
 using Authentication.Handlers;
 using Authentication.Interfaces;
@@ -8,8 +9,10 @@ using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +50,33 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
+
+builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(x =>
+    {
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!);
+        var issuer = builder.Configuration["Jwt:Issuer"]!;
+
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            //Change this for production
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateLifetime = true,
+            RequireExpirationTime = true,
+            ClockSkew = TimeSpan.FromMinutes(5),
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            //Change this for production
+            ValidateAudience = false,
+        };
+    });
 
 var app = builder.Build();
 

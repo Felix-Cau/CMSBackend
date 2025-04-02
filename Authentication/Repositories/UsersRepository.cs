@@ -15,6 +15,15 @@ namespace Authentication.Repositories
         private readonly UserDbContext _context = context;
         private readonly RoleHandler _roleHandler = roleHandler;
 
+        public virtual async Task<bool> ExistsAsync(SignUpForm form)
+        {
+            return await _context.Users.AnyAsync(x => x.Email == form.Email);
+        }
+
+        public virtual async Task<bool> ExistsAsync(NewAppUserForm form)
+        {
+            return await _context.Users.AnyAsync(x => x.Email == form.Email);
+        }
 
         public virtual async Task<ServiceResult<IEnumerable<AppUserDto>>> GetAllAsync(bool orderByDescending = false,
             Expression<Func<AppUserEntity, object>>? sortByExpression = null,
