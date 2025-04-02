@@ -41,6 +41,9 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             var result = await _projectService.GetProjectByIdAsync(id);
             return result.StatusCode switch
             {
@@ -70,6 +73,9 @@ namespace WebApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteProject(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             var result = await _projectService.DeleteProjectAsync(id);
             return result.StatusCode switch
             {

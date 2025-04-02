@@ -40,8 +40,6 @@ namespace Infrastructure.Services
 
         public async Task<ServiceResult<ProjectDto>> GetProjectByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return ServiceResult<ProjectDto>.BadRequest(new ProjectDto(), "Invalid field(s).");
 
             var projectEntity = await _projectRepository.GetAsync(findByExpression: x => x.Id == id, p => p.Client, p => p.Status);
             var loadUserResult =

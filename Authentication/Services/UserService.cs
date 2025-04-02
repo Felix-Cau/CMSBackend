@@ -92,7 +92,7 @@ namespace Authentication.Services
         {
             var result = await _userRepository.GetAllAsync(includes: user => user.Address);
             return !result.Succeeded 
-                ? ServiceResult<IEnumerable<AppUserDto>>.NotFound([], "Could not fetch users.") 
+                ? ServiceResult<IEnumerable<AppUserDto>>.Failed([], "Could not fetch users.") 
                 : result;
         }
         

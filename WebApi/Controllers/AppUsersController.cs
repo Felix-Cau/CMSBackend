@@ -76,7 +76,6 @@ namespace WebApi.Controllers
             return result.StatusCode switch
             {
                 200 => Ok(result.Result),
-                404 => NotFound(),
                 500 => Problem(),
                 _ => BadRequest()
             };
@@ -85,6 +84,9 @@ namespace WebApi.Controllers
         [HttpGet("getuser/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             var result = await _userService.GetUserByIdAsync(id);
             return result.StatusCode switch
             {
@@ -113,6 +115,9 @@ namespace WebApi.Controllers
         [HttpDelete("deleteuser/{id}")]
         public async Task<IActionResult> DeleteUserById(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
             var result = await _userService.DeleteUserAsync(id);
             return result.StatusCode switch
             {

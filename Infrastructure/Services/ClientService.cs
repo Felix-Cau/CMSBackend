@@ -32,17 +32,9 @@ namespace Infrastructure.Services
         public async Task<ServiceResult<IEnumerable<ClientDto>>> GetAllClientsAsync()
         {
             var clientList = await _clientRepository.GetAllAsync(false, null, null, x => x.ClientAddress, x => x.ContactInformation);
-            List<ClientDto> tempClientList = [];
+            
+            var returnList = clientList.Select(ClientFactory.ToModel);
 
-            foreach (var client in clientList)
-            {
-                var clientDto = ClientFactory.ToModel(client);
-                if (clientDto is null)
-                    return ServiceResult<IEnumerable<ClientDto>>.Failed([], "Internal server error");
-                tempClientList.Add(clientDto);
-            }
-
-            IEnumerable<ClientDto> returnList = tempClientList.AsEnumerable();
             return (returnList is not null)
                 ? ServiceResult<IEnumerable<ClientDto>>.Ok(returnList, "Ok")
                 : ServiceResult<IEnumerable<ClientDto>>.Failed([], "Failed");
