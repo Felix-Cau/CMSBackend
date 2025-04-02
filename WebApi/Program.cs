@@ -60,12 +60,13 @@ builder.Services.AddAuthentication(x =>
     {
         var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!);
         var issuer = builder.Configuration["Jwt:Issuer"]!;
+        var audience = builder.Configuration["Jwt:Audience"]!;
 
+        //Change this for production
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
         {
-            //Change this for production
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateLifetime = true,
