@@ -41,9 +41,9 @@ namespace Infrastructure.Services
             
         }
 
-        public async Task<ServiceResult<ClientDto>> GetClientByClientNameAsync(string clientName)
+        public async Task<ServiceResult<ClientDto>> GetClientByClientIdAsync(string clientId)
         {
-            var clientEntity = await _clientRepository.GetAsync(x => x.ClientName == clientName, x => x.ClientAddress, x => x.ContactInformation);
+            var clientEntity = await _clientRepository.GetAsync(x => x.Id == clientId, x => x.ClientAddress, x => x.ContactInformation);
 
             var returnClientEntity = ClientFactory.ToModel(clientEntity);
             if (returnClientEntity is null)

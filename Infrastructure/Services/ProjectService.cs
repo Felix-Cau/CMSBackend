@@ -43,7 +43,7 @@ namespace Infrastructure.Services
 
             var projectEntity = await _projectRepository.GetAsync(findByExpression: x => x.Id == id, p => p.Client, p => p.Status);
             var loadUserResult =
-                await _userRepository.GetUserAsync(findByExpression: u => u.Id == projectEntity.ProjectOwnerId);
+                await _userRepository.GetUserAsync(findByExpression: u => u.Id == projectEntity.ProjectOwnerId, u => u.Address);
             var projectOwner = loadUserResult.Result;
 
             if (projectOwner is null)
@@ -65,7 +65,7 @@ namespace Infrastructure.Services
             foreach (var project in projectList)
             {
                 var loadUserResult =
-                    await _userRepository.GetUserAsync(findByExpression: u => u.Id == project.ProjectOwnerId);
+                    await _userRepository.GetUserAsync(findByExpression: u => u.Id == project.ProjectOwnerId, u => u.Address);
                 var projectOwner = loadUserResult.Result;
                 if (projectOwner is null)
                     return ServiceResult<IEnumerable<ProjectDto>>.Failed([], "Internal server error");

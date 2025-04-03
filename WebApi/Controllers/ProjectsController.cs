@@ -70,7 +70,7 @@ namespace WebApi.Controllers
             };
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(string id)
         {
             if (string.IsNullOrEmpty(id))

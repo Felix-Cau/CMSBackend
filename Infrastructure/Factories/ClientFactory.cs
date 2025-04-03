@@ -1,9 +1,5 @@
-﻿using Authentication.Models;
-using Infrastructure.Data.Entities;
-using Infrastructure.Migrations;
+﻿using Infrastructure.Data.Entities;
 using Infrastructure.Models;
-using Microsoft.SqlServer.Server;
-using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Factories
 {
@@ -24,7 +20,7 @@ namespace Infrastructure.Factories
                 IsActive = true,
             };
 
-            ClientContactInformationEntity clientContactInformation = new()
+            client.ContactInformation = new ClientContactInformationEntity()
             {
                 ClientId = client.Id,
                 Email = form.ClientEmail,
@@ -32,7 +28,7 @@ namespace Infrastructure.Factories
                 Reference = form.Reference
             };
 
-            ClientAddressEntity clientAddress = new()
+            client.ClientAddress = new ClientAddressEntity()
             {
                 ClientId = client.Id,
                 Address = form.Address,

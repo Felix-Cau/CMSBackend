@@ -40,18 +40,18 @@ namespace WebApi.Controllers
             };
         }
 
-        [HttpGet("{clientName}")]
-        public async Task<IActionResult> GetProjectById(string clientName)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProjectById(string id)
         {
-            if (string.IsNullOrEmpty(clientName))
+            if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
-            var result = await _clientService.GetClientByClientNameAsync(clientName);
+            var result = await _clientService.GetClientByClientIdAsync(id);
             return result.StatusCode switch
             {
                 200 => Ok(result.Result),
                 500 => StatusCode(500, "Internal server error."),
-                _ => BadRequest(clientName),
+                _ => BadRequest(id),
             };
         }
 
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
             };
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(string id)
         {
             if (string.IsNullOrEmpty(id))

@@ -17,7 +17,7 @@
                 return;
             }
 
-            if (!string.Equals(providedApiKey, defaultApiKey])
+            if (!string.Equals(providedApiKey, defaultApiKey))
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Invalid api-key");

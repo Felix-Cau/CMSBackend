@@ -62,7 +62,7 @@ namespace Authentication.Factories
                 LastName = appUser.LastName,
                 JobTitle = appUser.JobTitle,
                 Role = role,
-                Address = appUser.Address!.Address,
+                Address = appUser.Address.Address,
                 PostalCode = appUser.Address.PostalCode,
                 City = appUser.Address.City
             };
