@@ -1,7 +1,6 @@
 ﻿using Authentication.Interfaces;
 using Authentication.Models;
 using Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers

@@ -1,18 +1,19 @@
-using System.Text;
 using Authentication.Contexts;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
 using Authentication.Repositories;
 using Authentication.Services;
-using Infrastructure.Data.Contexts;
-using Infrastructure.Data.Repositories;
-using Infrastructure.Interfaces;
-using Infrastructure.Services;
+using Data.Contexts;
+using Data.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Business.Interfaces;
+using Business.Services;
 using WebApi.Extensions.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);

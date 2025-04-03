@@ -1,6 +1,7 @@
-﻿using Infrastructure.Data.Entities;
+﻿using Data.Entities;
+using Infrastructure.Interfaces;
 
-namespace Infrastructure.Interfaces
+namespace Data.Interfaces
 {
     public interface IStatusRepository : IBaseRepository<StatusEntity>
     {

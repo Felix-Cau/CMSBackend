@@ -1,5 +1,5 @@
-﻿using Infrastructure.Interfaces;
-using Infrastructure.Models;
+﻿using Business.Interfaces;
+using Business.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
