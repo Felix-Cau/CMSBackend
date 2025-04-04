@@ -41,7 +41,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("ClientAddresses");
+                    b.ToTable("ClientAddresses", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientContactInformationEntity", b =>
@@ -61,7 +61,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("ClientId");
 
-                    b.ToTable("ClientContacts");
+                    b.ToTable("ClientContacts", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientEntity", b =>
@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ProjectEntity", b =>
@@ -134,7 +134,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.StatusEntity", b =>
@@ -151,7 +151,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Data.Entities.ClientAddressEntity", b =>

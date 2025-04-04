@@ -81,7 +81,7 @@ namespace Business.Services
             var projectDtoList = await SetCache();
             return projectDtoList is not null && projectDtoList.Any()
                 ? ServiceResult<IEnumerable<ProjectDto>>.Ok(projectDtoList, "Ok")
-                : ServiceResult<IEnumerable<ProjectDto>>.Failed([], "An unexpected error occured");
+                : ServiceResult<IEnumerable<ProjectDto>>.NotFound([], "Not found");
         }
 
         public async Task<ServiceResult> UpdateProjectAsync(EditProjectForm formData)
