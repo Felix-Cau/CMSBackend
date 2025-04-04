@@ -4,7 +4,6 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Interfaces;
 using Domain.Models;
-using Infrastructure.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Business.Services
@@ -28,9 +27,9 @@ namespace Business.Services
                 return ServiceResult.Failed();
 
             var status = await _statusService.GetStatusByStatusNameAsync(defaultStatus);
-            if (status is not null && status.Id is not 0)
+            if (status is not null && status.Result.Id is not 0)
             {
-                projectEntity.StatusId = status.Id;
+                projectEntity.StatusId = status.Result.Id;
             }
             else
             {
