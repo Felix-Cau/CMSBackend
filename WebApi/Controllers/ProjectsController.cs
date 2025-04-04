@@ -48,7 +48,7 @@ namespace WebApi.Controllers
             return result.StatusCode switch
             {
                 200 => Ok(result.Result),
-                400 => BadRequest(),
+                404 => NotFound(id),
                 500 => StatusCode(500, "Internal server error."),
                 _ => BadRequest(id),
             };

@@ -1,17 +1,18 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Authentication.Factories;
+﻿using Authentication.Factories;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Authentication.Services
 {
-    public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, IConfiguration configuration, IUsersRepository userRepository) : IUserService
+    public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, 
+        IConfiguration configuration, IUsersRepository userRepository, IMemoryCache cache) : IUserService
     {
         private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly SignInManager<AppUserEntity> _signInManager = signInManager;
@@ -19,6 +20,9 @@ namespace Authentication.Services
         private readonly IJwtTokenHandler _tokenHandler = jwtTokenHandler;
         private readonly IConfiguration _configuration = configuration;
         private readonly IUsersRepository _userRepository = userRepository;
+        private readonly IMemoryCache _cache = cache;
+        private const string _cacheKey_All = "User_All";
+
 
 
         public async Task<ServiceResult> SignUpAsync(SignUpForm form)
@@ -41,6 +45,7 @@ namespace Authentication.Services
                 if (!roleResult.Succeeded)
                     return ServiceResult.Failed();
 
+                _cache.Remove(_cacheKey_All);
                 return ServiceResult.Created() ;
             }
             return ServiceResult.Failed();
@@ -83,6 +88,7 @@ namespace Authentication.Services
                 if (!roleResult.Succeeded)
                     return ServiceResult.Failed();
 
+                _cache.Remove(_cacheKey_All);
                 return ServiceResult.Created();
             }
             return ServiceResult.Failed();
@@ -90,24 +96,38 @@ namespace Authentication.Services
 
         public async Task<ServiceResult<IEnumerable<AppUserDto>>> GetAllUsersAsync()
         {
-            var result = await _userRepository.GetAllAsync(includes: user => user.Address);
-            return !result.Succeeded 
-                ? ServiceResult<IEnumerable<AppUserDto>>.Failed([], "Could not fetch users.") 
-                : result;
+            if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<AppUserDto>? cachedItems))
+                return ServiceResult<IEnumerable<AppUserDto>>.Ok(cachedItems!, "Ok");
+
+            var appUserDtoList = await SetCache();
+            return appUserDtoList is not null && appUserDtoList.Any() 
+                ? ServiceResult<IEnumerable<AppUserDto>>.Ok(appUserDtoList!, "Ok")
+                : ServiceResult<IEnumerable<AppUserDto>>.Failed([], "An unexpected error occured");
         }
         
         public async Task<ServiceResult<AppUserDto>> GetUserByIdAsync(string id)
         {
+            AppUserDto appUserDto = new();
+
+            if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<AppUserDto>? cachedItems))
+            {
+                appUserDto = cachedItems.FirstOrDefault(x => x.Id == id);
+                if (appUserDto is not null)
+                    return ServiceResult<AppUserDto>.Ok(appUserDto, "Ok");
+            }
+
             var result = await _userRepository.GetUserAsync(findByExpression: x => x.Id == id, includes: user => user.Address);
-            return !result.Succeeded
-                ? ServiceResult<AppUserDto>.NotFound(result.Result, "Could not fetch user.")
-                : result;
+            if (result is null)
+                return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not found");
+
+            await SetCache();
+            return result;
         }
 
         public async Task<ServiceResult<IdentityResult>> UpdateUserAsync(EditAppUserForm formData)
         {
             var appUser = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == formData.Id);
-            if (appUser == null)
+            if (appUser is null)
                 return ServiceResult<IdentityResult>.NotFound(new IdentityResult(),"User not found.");
 
             var updatedUser = UserFactory.UpdateEntity(formData, appUser);
@@ -124,6 +144,7 @@ namespace Authentication.Services
             if (!updateUserInDbResult.Succeeded)
                 return ServiceResult<IdentityResult>.Failed(updateUserInDbResult, "Could not update user in database.");
 
+            _cache.Remove(_cacheKey_All);
             return ServiceResult<IdentityResult>.Ok(roleResult, "Updated user Role successfully.");
         }
 
@@ -141,8 +162,21 @@ namespace Authentication.Services
             if (!deleteUserResult.Succeeded)
                 return ServiceResult<IdentityResult>.Failed(deleteUserResult, "Could not delete user after removing it from the role list.");
 
+            _cache.Remove(_cacheKey_All);
             return ServiceResult<IdentityResult>.Ok(deleteUserResult, "User removed successfully.");
+        }
+
+        public async Task<IEnumerable<AppUserDto>?> SetCache()
+        {
+            _cache.Remove(_cacheKey_All);
+            var result = await _userRepository.GetAllAsync(false, sortByExpression: u => u.LastName, null, user => user.Address!);
+            if (!result.Succeeded)
+                return [];
+
+            _cache.Set(_cacheKey_All, result.Result, TimeSpan.FromHours(1));
+            return result.Result;
         }
     }
 }
+
 
