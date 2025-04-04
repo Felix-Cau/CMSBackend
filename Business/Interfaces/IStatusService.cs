@@ -1,10 +1,12 @@
-﻿using Data.Entities;
+﻿using Business.Models;
+using Data.Entities;
+using Domain.Models;
 
 namespace Business.Interfaces
 {
     public interface IStatusService
     {
-        Task<IEnumerable<StatusEntity>> GetStatusesAsync();
-        Task<StatusEntity> GetStatusByStatusNameAsync(string statusName);
+        Task<ServiceResult<IEnumerable<StatusDto>>> GetStatusesAsync();
+        Task<ServiceResult<StatusDto>> GetStatusByStatusNameAsync(string statusName);
     }
 }
