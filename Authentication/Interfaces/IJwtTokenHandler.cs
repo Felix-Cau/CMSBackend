@@ -1,4 +1,4 @@
-﻿using Authentication.Models;
+﻿using Authentication.Entities;
 
 namespace Authentication.Interfaces
 {

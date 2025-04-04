@@ -1,7 +1,6 @@
 using Authentication.Contexts;
 using Authentication.Handlers;
 using Authentication.Interfaces;
-using Authentication.Models;
 using Authentication.Repositories;
 using Authentication.Services;
 using Data.Contexts;
@@ -15,6 +14,7 @@ using System.Text;
 using Business.Interfaces;
 using Business.Services;
 using WebApi.Extensions.Middlewares;
+using Authentication.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

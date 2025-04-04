@@ -1,4 +1,5 @@
-﻿using Authentication.Models;
+﻿using Authentication.Entities;
+using Authentication.Models;
 using Domain.Models;
 
 namespace Authentication.Factories

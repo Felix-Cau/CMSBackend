@@ -1,4 +1,5 @@
 ﻿using Authentication.Contexts;
+using Authentication.Entities;
 using Authentication.Factories;
 using Authentication.Handlers;
 using Authentication.Interfaces;
