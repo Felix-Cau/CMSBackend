@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.Models
 {
@@ -6,6 +7,8 @@ namespace Domain.Models
     {
         [Required] 
         public string Email { get; set; } = null!;
+
+        public IFormFile? ImageFile { get; set; }
 
         [Required] 
         public string FirstName { get; set; } = null!;

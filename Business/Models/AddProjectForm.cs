@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Business.Models
 {
     public class AddProjectForm
     {
-        public string? ImageUrl { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
         [Required]
         public string ProjectName { get; set; } = null!;

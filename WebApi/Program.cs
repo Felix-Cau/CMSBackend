@@ -1,8 +1,11 @@
 using Authentication.Contexts;
+using Authentication.Entities;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Repositories;
 using Authentication.Services;
+using Business.Interfaces;
+using Business.Services;
 using Data.Contexts;
 using Data.Interfaces;
 using Infrastructure.Repositories;
@@ -10,17 +13,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
-using Business.Interfaces;
-using Business.Services;
-using WebApi.Extensions.Middlewares;
-using Authentication.Entities;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AlphaDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaDb")));
 builder.Services.AddDbContext<UserDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("AlphaUserDb")));
 builder.Services.AddIdentity<AppUserEntity, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddAuthorization();
 
 //DI stuff
 builder.Services.AddScoped<IUserService, UserService>();
@@ -51,7 +54,41 @@ builder.Services.AddCors(x =>
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+
+    options.EnableAnnotations();
+    options.ExampleFilters();
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v. 1.0",
+        Title = "Alpha API Documentation",
+        Description = "This is the standard documentation for Alpha BackOffice Portal.",
+    });
+
+    var apiAdminScheme = new OpenApiSecurityScheme
+    {
+        Name = "X-ADM-API-KEY",
+        Description = "Admin Api-Key Required",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "ApiKeyScheme",
+        Reference = new OpenApiReference
+        {
+            Id = "AdminApiKey",
+            Type = ReferenceType.SecurityScheme,
+        }
+    };
+    options.AddSecurityDefinition("AdminApiKey", apiAdminScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { apiAdminScheme, new List<string>() }
+    });
+
+});
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(x =>
@@ -79,6 +116,7 @@ builder.Services.AddAuthentication(x =>
             ValidIssuer = issuer,
             //Change this for production
             ValidateAudience = false,
+            //ValidAudience = audience
         };
     });
 
@@ -95,8 +133,6 @@ app.UseSwaggerUI(x =>
 });
 
 app.UseHttpsRedirection();
-
-app.UseMiddleware<DefaultAPiKeyMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

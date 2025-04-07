@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Authentication.Models
 {
     public class SignUpForm
     {
+        private IFormFile? ImageFile { get; set; }
+
         [Required]
         [MinLength(2)]
         public string FirstName { get; set; } = null!;

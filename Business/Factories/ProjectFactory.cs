@@ -6,13 +6,13 @@ namespace Business.Factories
 {
     public class ProjectFactory
     {
-        public static ProjectEntity? ToEntity(AddProjectForm form)
+        public static ProjectEntity? ToEntity(AddProjectForm form, string? newImageFileName = null)
         {
             return (form is null)
                 ? null
                 : new ProjectEntity
                 {
-                    ImageUrl = form.ImageUrl,
+                    ImageUrl = newImageFileName,
                     ProjectName = form.ProjectName,
                     ClientId = form.ClientId,
                     Description = form.Description,
@@ -23,14 +23,14 @@ namespace Business.Factories
                 };
         }
 
-        public static ProjectEntity? UpdateEntity(EditProjectForm form)
+        public static ProjectEntity? UpdateEntity(EditProjectForm form, string? newImageFileName = null)
         {
             return (form is null)
                 ? null
                 : new ProjectEntity
                 {
                     Id = form.Id,
-                    ImageUrl = form.ImageUrl,
+                    ImageUrl = newImageFileName ?? form.ImageUrl,
                     ProjectName = form.ProjectName,
                     ClientId = form.ClientId,
                     Description = form.Description,

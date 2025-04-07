@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Models
 {
     public class AddClientForm
     {
-        public string? ImageUrl { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
         [Required]
         public string ClientName { get; set; } = null!;

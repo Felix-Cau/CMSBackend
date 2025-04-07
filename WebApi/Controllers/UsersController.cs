@@ -39,7 +39,7 @@ namespace WebApi.Controllers
                 switch (signInResult.StatusCode)
                 {
                     case 200:
-                        return Ok(signInResult.Token);
+                        return Ok(signInResult);
                     case 401:
                         return Unauthorized("Invalid email or password.");
                     default:

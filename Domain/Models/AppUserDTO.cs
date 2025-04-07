@@ -3,6 +3,7 @@
     public class AppUserDto
     {
         public string Id { get; set; } = null!;
+        public string? ImageUrl { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Name => $"{FirstName} {LastName}";

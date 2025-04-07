@@ -6,7 +6,7 @@ namespace Authentication.Factories
 {
     public class UserFactory
     {
-        public static AppUserEntity? ToEntity(SignUpForm formData)
+        public static AppUserEntity? ToEntity(SignUpForm formData, string? newImageFileName = null)
         {
             if (formData is null)
                 return null;
@@ -17,6 +17,7 @@ namespace Authentication.Factories
                 FirstName = formData.FirstName,
                 LastName = formData.LastName,
                 Email = formData.Email,
+                ImageUrl = newImageFileName
             };
 
             appUser.Address = new AppUserAddressEntity()
@@ -26,7 +27,7 @@ namespace Authentication.Factories
             return appUser;
         }
 
-        public static AppUserEntity? ToEntity(NewAppUserForm formData)
+        public static AppUserEntity? ToEntity(NewAppUserForm formData, string? newImageFileName = null)
         {
             if (formData is null)
                 return null;
@@ -35,9 +36,11 @@ namespace Authentication.Factories
             {
                 UserName = formData.Email,
                 Email = formData.Email,
+                ImageUrl = newImageFileName, 
                 FirstName = formData.FirstName,
                 LastName = formData.LastName,
                 JobTitle = formData.JobTitle,
+
                 PhoneNumber = formData.PhoneNumber
             };
 
@@ -61,6 +64,7 @@ namespace Authentication.Factories
                 Id = appUser.Id,
                 FirstName = appUser.FirstName,
                 LastName = appUser.LastName,
+                ImageUrl = appUser.ImageUrl,
                 JobTitle = appUser.JobTitle,
                 Role = role,
                 Address = appUser.Address.Address,
@@ -70,13 +74,14 @@ namespace Authentication.Factories
             return appUserDto;
         }
 
-        public static AppUserEntity? UpdateEntity(EditAppUserForm formData, AppUserEntity oldUser)
+        public static AppUserEntity? UpdateEntity(EditAppUserForm formData, AppUserEntity oldUser, string? newImageFileName = null)
         {
             if (formData is null)
                 return null;
 
             oldUser.FirstName = formData.FirstName;
             oldUser.LastName = formData.LastName;
+            oldUser.ImageUrl = newImageFileName ?? formData.ImageUrl;
             oldUser.JobTitle = formData.JobTitle;
             oldUser.PhoneNumber = formData.PhoneNumber;
 

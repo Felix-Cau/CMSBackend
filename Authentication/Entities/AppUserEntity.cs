@@ -9,6 +9,7 @@ namespace Authentication.Entities
 
         [ProtectedPersonalData] 
         public string LastName { get; set; } = null!;
+        public string? ImageUrl { get; set; }
         public string? JobTitle { get; set; }
         public virtual AppUserAddressEntity? Address { get; set; }
 

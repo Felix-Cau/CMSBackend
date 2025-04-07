@@ -65,7 +65,7 @@ namespace Authentication.Services
 
             var token = _tokenHandler.GenerateToken(user!, userRole);
 
-            return ServiceResult.TokenOk(token);
+            return ServiceResult.TokenOk(token, userRole);
         }
 
         public async Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form)

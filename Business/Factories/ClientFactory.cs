@@ -5,16 +5,15 @@ namespace Business.Factories
 {
     public class ClientFactory
     {
-        public static ClientEntity? ToEntity(AddClientForm form)
+        public static ClientEntity? ToEntity(AddClientForm form, string? newImageFileName = null)
         {
             if (form is null)
                 return null;
 
             ClientEntity client = new()
             {
-                ImageUrl = form.ImageUrl,
+                ImageUrl = newImageFileName,
                 ClientName = form.ClientName,
-                //Hur var det man gjorde för att denna skulle settas när man sparade till db:n?
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 IsActive = true,
@@ -46,6 +45,7 @@ namespace Business.Factories
             ClientDto clientDto = new()
             {
                 Id = entity.Id,
+                ImageUrl = entity.ImageUrl,
                 ClientName = entity.ClientName,
                 Email = entity.ContactInformation.Email,
                 Phone = entity.ContactInformation.Phone,
@@ -60,13 +60,13 @@ namespace Business.Factories
             return clientDto;
         }
 
-        public static ClientEntity? UpdateEntity(EditClientForm form, ClientEntity oldEntity)
+        public static ClientEntity? UpdateEntity(EditClientForm form, ClientEntity oldEntity, string? newImageFileName = null)
         {
             if (form is null || oldEntity is null)
                 return null;
 
             oldEntity.ClientName = form.ClientName;
-            oldEntity.ImageUrl = form.ImageUrl;
+            oldEntity.ImageUrl = newImageFileName ?? form.ImageUrl;
             oldEntity.ClientName = form.ClientName;
             oldEntity.Modified = DateTime.Now;
             oldEntity.ContactInformation.Email = form.ClientEmail;
