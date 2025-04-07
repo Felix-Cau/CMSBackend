@@ -7,12 +7,13 @@
         public string? Message { get; set; }
 
         public string? Token { get; set; }
+        public string? Role { get; set; }
 
         public static ServiceResult Ok(string? message = null) =>
             new() { Succeeded = true, StatusCode = 200, Message = message };
 
-        public static ServiceResult TokenOk(string? token = null, string? role = null) =>
-            new() { Succeeded = true, StatusCode = 200, Token = token };
+        public static ServiceResult TokenOk(string? token = null, string? role = null, string? message = null) =>
+            new() { Succeeded = true, StatusCode = 200, Token = token, Role = role };
 
         public static ServiceResult Created(string? message = null) =>
             new() { Succeeded = true, StatusCode = 201, Message = message };
