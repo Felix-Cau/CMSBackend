@@ -69,7 +69,7 @@ namespace Business.Services
             if (projectDto is null)
                 return ServiceResult<ProjectDto>.Failed(new ProjectDto(), "An unexpected error occured.");
 
-            await SetCache();
+            await UpdateCacheAsync();
             return ServiceResult<ProjectDto>.Ok(projectDto, "Ok");
         }
 
@@ -78,7 +78,7 @@ namespace Business.Services
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<ProjectDto>? cachedItems))
                 return ServiceResult<IEnumerable<ProjectDto>>.Ok(cachedItems, "Ok");
 
-            var projectDtoList = await SetCache();
+            var projectDtoList = await UpdateCacheAsync();
             return projectDtoList is not null && projectDtoList.Any()
                 ? ServiceResult<IEnumerable<ProjectDto>>.Ok(projectDtoList, "Ok")
                 : ServiceResult<IEnumerable<ProjectDto>>.NotFound([], "Not found");
@@ -111,7 +111,7 @@ namespace Business.Services
             return ServiceResult.Ok();
         }
 
-        public async Task<IEnumerable<ProjectDto>> SetCache()
+        public async Task<IEnumerable<ProjectDto>> UpdateCacheAsync()
         {
             _cache.Remove(_cacheKey_All);
             var projectEntityList = await _projectRepository.GetAllAsync(true, p => p.Created, null, c => c.Client, c => c.Status!);

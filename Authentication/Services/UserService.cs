@@ -100,7 +100,7 @@ namespace Authentication.Services
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<AppUserDto>? cachedItems))
                 return ServiceResult<IEnumerable<AppUserDto>>.Ok(cachedItems!, "Ok");
 
-            var appUserDtoList = await SetCache();
+            var appUserDtoList = await UpdateCacheAsync();
             return appUserDtoList is not null && appUserDtoList.Any() 
                 ? ServiceResult<IEnumerable<AppUserDto>>.Ok(appUserDtoList!, "Ok")
                 : ServiceResult<IEnumerable<AppUserDto>>.Failed([], "An unexpected error occured");
@@ -121,7 +121,7 @@ namespace Authentication.Services
             if (result is null)
                 return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not found");
 
-            await SetCache();
+            await UpdateCacheAsync();
             return result;
         }
 
@@ -167,7 +167,7 @@ namespace Authentication.Services
             return ServiceResult<IdentityResult>.Ok(deleteUserResult, "User removed successfully.");
         }
 
-        public async Task<IEnumerable<AppUserDto>?> SetCache()
+        public async Task<IEnumerable<AppUserDto>?> UpdateCacheAsync()
         {
             _cache.Remove(_cacheKey_All);
             var result = await _userRepository.GetAllAsync(false, sortByExpression: u => u.LastName, null, user => user.Address!);

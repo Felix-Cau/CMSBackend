@@ -18,7 +18,7 @@ namespace Business.Services
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<StatusDto> cachedItems))
                 return ServiceResult<IEnumerable<StatusDto>>.Ok(cachedItems, "Ok");
 
-            var statusDtoList = await SetCache();
+            var statusDtoList = await UpdateCacheAsync();
             return statusDtoList is not null && statusDtoList.Any()
                 ? ServiceResult<IEnumerable<StatusDto>>.Ok(statusDtoList, "Ok")
                 : ServiceResult<IEnumerable<StatusDto>>.Failed([], "An unexpected error occured");
@@ -43,11 +43,11 @@ namespace Business.Services
             if (statusDto is null)
                 return ServiceResult<StatusDto>.Failed(new StatusDto(), "An unexpected error occured");
 
-            await SetCache();
+            await UpdateCacheAsync();
             return ServiceResult<StatusDto>.Ok(statusDto, "Ok");
         }
 
-        public async Task<IEnumerable<StatusDto>> SetCache()
+        public async Task<IEnumerable<StatusDto>> UpdateCacheAsync()
         {
             _cache.Remove(_cacheKey_All);
             var statusEntityList = await _statusRepository.GetAllAsync(sortByExpression: x => x.Id);

@@ -39,7 +39,7 @@ namespace Business.Services
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<ClientDto>? cachedItems))
                 return ServiceResult<IEnumerable<ClientDto>>.Ok(cachedItems!, "Ok");
 
-            var clientDtoList = await SetCache();
+            var clientDtoList = await UpdateCacheAsync();
             return clientDtoList is not null && clientDtoList.Any() 
                 ? ServiceResult<IEnumerable<ClientDto>>.Ok(clientDtoList, "ok")
                 : ServiceResult<IEnumerable<ClientDto>>.Failed([], "An unexpected error occured");
@@ -63,7 +63,7 @@ namespace Business.Services
             if (clientEntity is null)
                 return ServiceResult<ClientDto>.NotFound(new ClientDto(), "Not found");
 
-            await SetCache();
+            await UpdateCacheAsync();
             return ServiceResult<ClientDto>.Ok(clientEntity, "Ok");
         }
 
@@ -98,7 +98,7 @@ namespace Business.Services
             return ServiceResult.Ok("Client successfully deleted.");
         }
 
-        public async Task<IEnumerable<ClientDto>> SetCache()
+        public async Task<IEnumerable<ClientDto>> UpdateCacheAsync()
         {
             _cache.Remove(_cacheKey_All);
             var clientEntityList = await _clientRepository.GetAllAsync(false, c => c.ClientName, null, c => c.ClientAddress!, c => c.ContactInformation!);
