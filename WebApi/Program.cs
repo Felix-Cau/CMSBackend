@@ -54,43 +54,44 @@ builder.Services.AddCors(x =>
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 
-//(options =>
-//{
-//    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-//    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-//    options.IncludeXmlComments(xmlPath);
+    options.EnableAnnotations();
+    options.ExampleFilters();
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v. 1.0",
+        Title = "Alpha API Documentation",
+        Description = "This is the standard documentation for Alpha Portal.",
+    });
 
-//    options.EnableAnnotations();
-//    options.ExampleFilters();
-//    options.SwaggerDoc("v1", new OpenApiInfo
-//    {
-//        Version = "v. 1.0",
-//        Title = "Alpha API Documentation",
-//        Description = "This is the standard documentation for Alpha BackOffice Portal.",
-//    });
+    var apiAdminScheme = new OpenApiSecurityScheme
+    {
+        Name = "X-ADM-API-KEY",
+        Description = "Admin Api-Key Required",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "ApiKeyScheme",
+        Reference = new OpenApiReference
+        {
+            Id = "AdminApiKey",
+            Type = ReferenceType.SecurityScheme,
+        }
+    };
+    options.AddSecurityDefinition("AdminApiKey", apiAdminScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { apiAdminScheme, new List<string>() }
+    });
 
-//    var apiAdminScheme = new OpenApiSecurityScheme
-//    {
-//        Name = "X-ADM-API-KEY",
-//        Description = "Admin Api-Key Required",
-//        In = ParameterLocation.Header,
-//        Type = SecuritySchemeType.ApiKey,
-//        Scheme = "ApiKeyScheme",
-//        Reference = new OpenApiReference
-//        {
-//            Id = "AdminApiKey",
-//            Type = ReferenceType.SecurityScheme,
-//        }
-//    };
-//    options.AddSecurityDefinition("AdminApiKey", apiAdminScheme);
-//    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-//    {
-//        { apiAdminScheme, new List<string>() }
-//    });
+});
 
-//});
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(x =>
@@ -130,7 +131,7 @@ app.MapOpenApi();
 app.UseSwagger();
 app.UseSwaggerUI(x =>
 {
-    x.SwaggerEndpoint("/swagger/v1/swagger.json", "Alpha API");
+    x.SwaggerEndpoint("/swagger/v1/swagger.json", "Alpha API v.1");
     x.RoutePrefix = string.Empty;
 });
 

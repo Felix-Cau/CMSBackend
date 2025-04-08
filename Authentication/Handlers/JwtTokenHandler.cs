@@ -27,7 +27,12 @@ namespace Authentication.Handlers
                 };
 
                 if (role is not null)
+                {
                     claims.Add(new Claim(ClaimTypes.Role, role));
+
+                    if (role == "Admin")
+                        claims.Add(new Claim("apiKey", _configuration["SecretKeys:Admin"]!));
+                }
 
                 SecurityTokenDescriptor tokenDescriptor = new()
                 {
