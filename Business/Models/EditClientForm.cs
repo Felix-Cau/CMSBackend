@@ -7,7 +7,7 @@ namespace Business.Models
     {
         [Required]
         public string Id { get; set; } = null!;
-        public string? ImageUrl { get; set; }
+        public string? ImageName { get; set; }
         public IFormFile? NewImageFile { get; set; }
 
         [Required]

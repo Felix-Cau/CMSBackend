@@ -12,7 +12,7 @@ namespace Business.Factories
 
             ClientEntity client = new()
             {
-                ImageUrl = newImageFileName,
+                ImageName = newImageFileName,
                 ClientName = form.ClientName,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
@@ -45,7 +45,7 @@ namespace Business.Factories
             ClientDto clientDto = new()
             {
                 Id = entity.Id,
-                ImageUrl = entity.ImageUrl,
+                ImageName = entity.ImageName,
                 ClientName = entity.ClientName,
                 Email = entity.ContactInformation.Email,
                 Phone = entity.ContactInformation.Phone,
@@ -66,7 +66,7 @@ namespace Business.Factories
                 return null;
 
             oldEntity.ClientName = form.ClientName;
-            oldEntity.ImageUrl = newImageFileName ?? form.ImageUrl;
+            oldEntity.ImageName = newImageFileName ?? form.ImageName;
             oldEntity.ClientName = form.ClientName;
             oldEntity.Modified = DateTime.Now;
             oldEntity.ContactInformation.Email = form.ClientEmail;

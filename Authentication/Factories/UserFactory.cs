@@ -17,7 +17,7 @@ namespace Authentication.Factories
                 FirstName = formData.FirstName,
                 LastName = formData.LastName,
                 Email = formData.Email,
-                ImageUrl = newImageFileName
+                ImageName = newImageFileName
             };
 
             appUser.Address = new AppUserAddressEntity()
@@ -36,7 +36,7 @@ namespace Authentication.Factories
             {
                 UserName = formData.Email,
                 Email = formData.Email,
-                ImageUrl = newImageFileName, 
+                ImageName = newImageFileName, 
                 FirstName = formData.FirstName,
                 LastName = formData.LastName,
                 JobTitle = formData.JobTitle,
@@ -64,7 +64,7 @@ namespace Authentication.Factories
                 Id = appUser.Id,
                 FirstName = appUser.FirstName,
                 LastName = appUser.LastName,
-                ImageUrl = appUser.ImageUrl,
+                ImageName = appUser.ImageName,
                 JobTitle = appUser.JobTitle,
                 Role = role,
                 Address = appUser.Address.Address,
@@ -81,7 +81,7 @@ namespace Authentication.Factories
 
             oldUser.FirstName = formData.FirstName;
             oldUser.LastName = formData.LastName;
-            oldUser.ImageUrl = newImageFileName ?? formData.ImageUrl;
+            oldUser.ImageName = newImageFileName ?? formData.ImageName;
             oldUser.JobTitle = formData.JobTitle;
             oldUser.PhoneNumber = formData.PhoneNumber;
 

@@ -6,13 +6,14 @@
         public int StatusCode { get; set; }
         public string? Message { get; set; }
         public string? Token { get; set; }
-        public string? Role { get; set; }
+        public bool? IsAdmin { get; set; }
+        public string? AdminApiKey { get; set; }
 
         public static ServiceResult Ok(string? message = null) =>
             new() { Succeeded = true, StatusCode = 200, Message = message };
 
-        public static ServiceResult TokenOk(string? token = null, string? role = null, string? message = null) =>
-            new() { Succeeded = true, StatusCode = 200, Token = token, Role = role };
+        public static ServiceResult AuthOk(string? token = null, bool? isAdmin = null, string? adminApiKey = null, string? message = null) =>
+            new() { Succeeded = true, StatusCode = 200, Token = token, IsAdmin = isAdmin, AdminApiKey = adminApiKey, Message = message };
 
         public static ServiceResult Created(string? message = null) =>
             new() { Succeeded = true, StatusCode = 201, Message = message };

@@ -37,6 +37,8 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 
+//Registrera bildhandler samt url för sparning i Azure.
+
 builder.Services.AddCors(x =>
 {
     //Strict behövs för VG

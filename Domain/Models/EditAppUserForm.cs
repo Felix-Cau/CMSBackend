@@ -8,7 +8,7 @@ namespace Domain.Models
         [Required]
         public string Id { get; set; } = null!;
 
-        public string? ImageUrl { get; set; }
+        public string? ImageName { get; set; }
         public IFormFile? ImageFile { get; set; }
 
         [Required]

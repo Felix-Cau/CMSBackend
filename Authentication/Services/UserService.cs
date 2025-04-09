@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Authentication.Services
 {
@@ -59,13 +58,24 @@ namespace Authentication.Services
                 return ServiceResult.UnAuthorized();
 
             var user = await _userManager.FindByEmailAsync(form.Email);
+            if (user is null)
+                return ServiceResult.NotFound();
+
             var userRole = await _roleHandler.GetRoleAsync(user!);
             if (userRole is null)
                 return ServiceResult.Failed();
 
+            string adminApiKey = string.Empty;
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin)
+            {
+                adminApiKey = _configuration["SecretKeys:Admin"]!;
+            }
+
             var token = _tokenHandler.GenerateToken(user!, userRole);
 
-            return ServiceResult.TokenOk(token, userRole);
+            return ServiceResult.AuthOk(token, isAdmin, adminApiKey);
         }
 
         public async Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form)

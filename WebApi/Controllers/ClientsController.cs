@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Business.Models;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions.Attributes;
 
 namespace WebApi.Controllers
 {
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
         private readonly IClientService _clientService = clientService;
 
         [HttpPost]
+        [UseAdminApiKey]
         public async Task<IActionResult> Create(AddClientForm form)
         {
             if (!ModelState.IsValid)
@@ -56,6 +58,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
+        [UseAdminApiKey]
         public async Task<IActionResult> UpdateClient(EditClientForm form)
         {
             if (!ModelState.IsValid) 
@@ -73,6 +76,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [UseAdminApiKey]
         public async Task<IActionResult> DeleteClient(string id)
         {
             if (string.IsNullOrEmpty(id))

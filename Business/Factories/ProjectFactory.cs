@@ -12,7 +12,7 @@ namespace Business.Factories
                 ? null
                 : new ProjectEntity
                 {
-                    ImageUrl = newImageFileName,
+                    ImageName = newImageFileName,
                     ProjectName = form.ProjectName,
                     ClientId = form.ClientId,
                     Description = form.Description,
@@ -30,7 +30,7 @@ namespace Business.Factories
                 : new ProjectEntity
                 {
                     Id = form.Id,
-                    ImageUrl = newImageFileName ?? form.ImageUrl,
+                    ImageName = newImageFileName ?? form.ImageName,
                     ProjectName = form.ProjectName,
                     ClientId = form.ClientId,
                     Description = form.Description,
@@ -49,7 +49,7 @@ namespace Business.Factories
                 : new ProjectDto
                 {
                     Id = entity.Id,
-                    ImageUrl = entity.ImageUrl,
+                    ImageName = entity.ImageName,
                     ProjectName = entity.ProjectName,
                     ClientId = entity.ClientId,
                     ClientName = entity.Client.ClientName,

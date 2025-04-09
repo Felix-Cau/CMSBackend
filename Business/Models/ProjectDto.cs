@@ -3,7 +3,7 @@
     public class ProjectDto
     {
         public string Id { get; set; } = null!;
-        public string? ImageUrl { get; set; }
+        public string? ImageName { get; set; }
         public string ProjectName { get; set; } = null!;
         public string ClientId { get; set; } = null!;
         public string ClientName { get; set; } = null!;

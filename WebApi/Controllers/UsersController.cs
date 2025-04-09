@@ -1,4 +1,5 @@
-﻿using Authentication.Interfaces;
+﻿using Authentication.Entities;
+using Authentication.Interfaces;
 using Authentication.Models;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +17,15 @@ namespace WebApi.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(IUserService userService) : ControllerBase
+    public class UsersController(IUserService userService, SignInManager<AppUserEntity> signInManager) : ControllerBase
     {
         private readonly IUserService _userService = userService;
+        private readonly SignInManager<AppUserEntity> _signInManager = signInManager;
 
 
         //Fixa authentication/authorization.
         [HttpPost("signup")]
+        [AllowAnonymous]
         [SwaggerOperation(Summary = "Creates a new User upon sign up.")]
         [SwaggerRequestExample(typeof(SignUpForm), typeof(SignUpDataExample))]
         [SwaggerResponseExample(400, typeof(SignUpDataExample))]
@@ -46,6 +49,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("signin")]
+        [AllowAnonymous]
         [SwaggerOperation(Summary = "User login if credentials are valid.")]
         [SwaggerRequestExample(typeof(SignInForm), typeof(SignInDataExample))]
         [SwaggerResponseExample(400, typeof(SignInDataExample))]
@@ -62,6 +66,7 @@ namespace WebApi.Controllers
             {
                 200 => Ok(signInResult),
                 401 => Unauthorized("Invalid email or password."),
+                404 => NotFound("User does not exist."),
                 _ => BadRequest(form),
             };
         }
@@ -69,7 +74,7 @@ namespace WebApi.Controllers
         
         [HttpPost("createuser")]
         [UseAdminApiKey]
-        [Consumes("multipark/form-data")]
+        [Consumes("multipart/form-data")]
         [SwaggerOperation(Summary = "Creates a new user when logged in as Admin.", Description = "Requries a API-key 'X-ADM-API-KEY' in the header request.")]
         [SwaggerRequestExample(typeof(NewAppUserForm), typeof(NewAppUserFormDataExample))]
         [SwaggerResponseExample(400, typeof(NewAppUserFormDataExample))]
@@ -174,5 +179,11 @@ namespace WebApi.Controllers
             };
         }
 
+        [HttpGet("signout")]
+        public async Task<IActionResult> Signout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
     }
 }

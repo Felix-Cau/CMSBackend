@@ -13,7 +13,7 @@ namespace WebApi.Extensions.UserEndPoint
                 {
                     //AI generated
                     Id = "3619fb70-65e6-47a4-96e8-be4821fbd409",
-                    ImageUrl = "23f24c20-8fa1-48f8-8b09-75b00a0c6baa-2.jpg",
+                    ImageName = "23f24c20-8fa1-48f8-8b09-75b00a0c6baa-2.jpg",
                     FirstName = "Alice",
                     LastName = "Johnson",
                     JobTitle = "Software Engineer",
@@ -26,7 +26,7 @@ namespace WebApi.Extensions.UserEndPoint
                 {
                     //AI generated
                     Id = "23f24c20-8fa1-48f8-8b09-75b00a0c6baa",
-                    ImageUrl = "23f24c20-8fa1-48f8-8b09-75b00a0c6baa-56.jpg",
+                    ImageName = "23f24c20-8fa1-48f8-8b09-75b00a0c6baa-56.jpg",
                     FirstName = "Bob",
                     LastName = "Smith",
                     JobTitle = "Product Manager",

@@ -9,7 +9,7 @@ namespace WebApi.Extensions.UserEndPoint
         {
             //AI generated
             Id = "123e4567-e89b-12d3-a456-426614174000",
-            ImageUrl = "123e4567-e89b-12d3-a456-426614174000-1.jpg",
+            ImageName = "123e4567-e89b-12d3-a456-426614174000-1.jpg",
             FirstName = "John",
             LastName = "Doe",
             JobTitle = "Software Developer",
