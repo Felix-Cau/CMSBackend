@@ -137,7 +137,7 @@ namespace WebApi.Controllers
             };
         }
 
-        [HttpPut("updateuser/{id}")]
+        [HttpPut("updateuser")]
         [UseAdminApiKey]
         [Consumes("multipart/form-data")]
         [SwaggerOperation(Summary = "Updates a user when logged in as Admin", Description = "Requries a API-key 'X-ADM-API-KEY' in the header request.")]

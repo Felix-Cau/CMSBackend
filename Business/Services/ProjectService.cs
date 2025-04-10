@@ -3,18 +3,20 @@ using Business.Factories;
 using Business.Interfaces;
 using Business.Models;
 using Data.Interfaces;
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Business.Services
 {
-    public class ProjectService(IProjectRepository projectRepository, IStatusService statusService, IUsersRepository userRepository, IMemoryCache cache) : IProjectService
+    public class ProjectService(IProjectRepository projectRepository, IStatusService statusService, IUsersRepository userRepository, IMemoryCache cache, IFileHandler fileHandler) : IProjectService
     {
         private readonly IProjectRepository _projectRepository = projectRepository;
         private readonly IStatusService _statusService = statusService;
         private readonly IUsersRepository _userRepository = userRepository;
         private readonly IMemoryCache _cache = cache;
         private const string _cacheKey_All = "Project_All";
+        private readonly IFileHandler _fileHandler = fileHandler;
 
 
         public async Task<ServiceResult> CreateProjectAsync(AddProjectForm formData, string defaultStatus = "STARTED")
@@ -22,7 +24,12 @@ namespace Business.Services
             if (formData is null)
                 return ServiceResult.BadRequest();
 
-            var projectEntity = ProjectFactory.ToEntity(formData);
+            var imageFileUri = await _fileHandler.UploadFileAsync(formData.ImageFile!);
+
+            var projectEntity = imageFileUri is null
+                ? ProjectFactory.ToEntity(formData)
+                : ProjectFactory.ToEntity(formData, imageFileUri);
+                
             if(projectEntity is null)
                 return ServiceResult.Failed();
 
@@ -89,7 +96,12 @@ namespace Business.Services
             if (formData is null)
                 return ServiceResult.BadRequest();
 
-            var projectEntity = ProjectFactory.UpdateEntity(formData);
+            var imageFileUri = await _fileHandler.UploadFileAsync(formData.NewImageFile!);
+
+            var projectEntity = imageFileUri is null
+                ? ProjectFactory.UpdateEntity(formData)
+                : ProjectFactory.UpdateEntity(formData, imageFileUri);
+
             if (projectEntity is null)
                 return ServiceResult.Failed();
 

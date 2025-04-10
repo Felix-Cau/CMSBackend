@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using Domain.Handlers;
+using Domain.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +39,10 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 
-//Registrera bildhandler samt url för sparning i Azure.
+var azureConnectionString = builder.Configuration.GetConnectionString("AzureBlobStorage");
+var azureContainerName = "images";
+builder.Services.AddScoped<IFileHandler>(_ => new AzureFileHandler(azureConnectionString!, azureContainerName));
+
 
 builder.Services.AddCors(x =>
 {
@@ -71,7 +76,26 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is the standard documentation for Alpha Portal.",
     });
 
-    var apiAdminScheme = new OpenApiSecurityScheme
+    var jwtBearerScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter JWT Bearer token",
+        Scheme = "Bearer",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    options.AddSecurityDefinition("Bearer", jwtBearerScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtBearerScheme, new List<string>() }
+    });
+
+var apiAdminScheme = new OpenApiSecurityScheme
     {
         Name = "X-ADM-API-KEY",
         Description = "Admin Api-Key Required",
@@ -81,7 +105,7 @@ builder.Services.AddSwaggerGen(options =>
         Reference = new OpenApiReference
         {
             Id = "AdminApiKey",
-            Type = ReferenceType.SecurityScheme,
+            Type = ReferenceType.SecurityScheme
         }
     };
     options.AddSecurityDefinition("AdminApiKey", apiAdminScheme);
@@ -109,7 +133,7 @@ builder.Services.AddAuthentication(x =>
 
         //Change this for production
         x.RequireHttpsMetadata = false;
-        x.SaveToken = true;
+        //x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,

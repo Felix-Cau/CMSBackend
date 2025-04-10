@@ -2,16 +2,18 @@
 using Business.Interfaces;
 using Business.Models;
 using Data.Interfaces;
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Business.Services
 {
-    public class ClientService(IClientRepository clientRepository, IMemoryCache cache) : IClientService
+    public class ClientService(IClientRepository clientRepository, IMemoryCache cache, IFileHandler fileHandler) : IClientService
     {
         private readonly IClientRepository _clientRepository = clientRepository;
         private readonly IMemoryCache _cache = cache;
         private const string _cacheKey_All = "Client_All";
+        private readonly IFileHandler _fileHandler = fileHandler;
 
         public async Task<ServiceResult> CreateClientAsync(AddClientForm form)
         {
@@ -22,7 +24,11 @@ namespace Business.Services
             if (doesClientExist)
                 return ServiceResult.AlreadyExists();
 
-            var clientEntity = ClientFactory.ToEntity(form);
+            var imageFileUri = await _fileHandler.UploadFileAsync(form.ImageFile!);
+            var clientEntity = imageFileUri is null
+                ? ClientFactory.ToEntity(form)
+                : ClientFactory.ToEntity(form, imageFileUri);
+
             if (clientEntity is null)
                 return ServiceResult.Failed();
 
@@ -47,6 +53,9 @@ namespace Business.Services
 
         public async Task<ServiceResult<ClientDto>> GetClientByClientIdAsync(string clientId)
         {
+            if (string.IsNullOrEmpty(clientId))
+                return ServiceResult<ClientDto>.BadRequest(new ClientDto(), "Invalid field(s)");
+
             ClientDto clientDto = new();
 
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<ClientDto>? cachedItems))
@@ -76,7 +85,12 @@ namespace Business.Services
             if (oldClient is null)
                 return ServiceResult.NotFound();
 
-            var updatedClient = ClientFactory.UpdateEntity(form, oldClient);
+            var imageFileUri = await _fileHandler.UploadFileAsync(form.NewImageFile!);
+
+            var updatedClient = imageFileUri is null
+                ? ClientFactory.UpdateEntity(form, oldClient)
+                : ClientFactory.UpdateEntity(form, oldClient, imageFileUri);
+                
             if (updatedClient is null)
                 return ServiceResult.Failed();
 
@@ -90,7 +104,10 @@ namespace Business.Services
 
         public async Task<ServiceResult> DeleteClientAsync(string id)
         {
-            var deleteClientResult = await _clientRepository.DeleteAsync(x => x.Id == id);
+            if (string.IsNullOrEmpty(id))
+                return ServiceResult.BadRequest();
+
+                var deleteClientResult = await _clientRepository.DeleteAsync(x => x.Id == id);
             if (!deleteClientResult)
                 return ServiceResult.Failed();
 

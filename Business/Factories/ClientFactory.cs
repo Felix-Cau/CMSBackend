@@ -5,14 +5,14 @@ namespace Business.Factories
 {
     public class ClientFactory
     {
-        public static ClientEntity? ToEntity(AddClientForm form, string? newImageFileName = null)
+        public static ClientEntity? ToEntity(AddClientForm form, string? newImageFileUri = null)
         {
             if (form is null)
                 return null;
 
             ClientEntity client = new()
             {
-                ImageName = newImageFileName,
+                ImageName = newImageFileUri,
                 ClientName = form.ClientName,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
@@ -60,13 +60,13 @@ namespace Business.Factories
             return clientDto;
         }
 
-        public static ClientEntity? UpdateEntity(EditClientForm form, ClientEntity oldEntity, string? newImageFileName = null)
+        public static ClientEntity? UpdateEntity(EditClientForm form, ClientEntity oldEntity, string? newImageFileUri = null)
         {
             if (form is null || oldEntity is null)
                 return null;
 
             oldEntity.ClientName = form.ClientName;
-            oldEntity.ImageName = newImageFileName ?? form.ImageName;
+            oldEntity.ImageName = newImageFileUri ?? form.ImageName;
             oldEntity.ClientName = form.ClientName;
             oldEntity.Modified = DateTime.Now;
             oldEntity.ContactInformation.Email = form.ClientEmail;

@@ -3,6 +3,7 @@ using Authentication.Factories;
 using Authentication.Handlers;
 using Authentication.Interfaces;
 using Authentication.Models;
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 namespace Authentication.Services
 {
     public class UserService(UserManager<AppUserEntity> userManager, SignInManager<AppUserEntity> signInManager, RoleHandler roleHander, IJwtTokenHandler jwtTokenHandler, 
-        IConfiguration configuration, IUsersRepository userRepository, IMemoryCache cache) : IUserService
+        IConfiguration configuration, IUsersRepository userRepository, IMemoryCache cache, IFileHandler fileHandler) : IUserService
     {
         private readonly UserManager<AppUserEntity> _userManager = userManager;
         private readonly SignInManager<AppUserEntity> _signInManager = signInManager;
@@ -22,11 +23,15 @@ namespace Authentication.Services
         private readonly IUsersRepository _userRepository = userRepository;
         private readonly IMemoryCache _cache = cache;
         private const string _cacheKey_All = "User_All";
+        private readonly IFileHandler _fileHandler = fileHandler;
 
 
 
         public async Task<ServiceResult> SignUpAsync(SignUpForm form)
         {
+            if (form is null)
+                return ServiceResult.BadRequest();
+
             var appUser = UserFactory.ToEntity(form);
 
             if (appUser is not null)
@@ -53,6 +58,9 @@ namespace Authentication.Services
 
         public async Task<ServiceResult> SignInAsync(SignInForm form)
         {
+            if (form is null)
+                return ServiceResult.BadRequest();
+
             var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, false, false);
             if (!result.Succeeded)
                 return ServiceResult.UnAuthorized();
@@ -80,11 +88,17 @@ namespace Authentication.Services
 
         public async Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form)
         {
+            if (form is null)
+                return ServiceResult.BadRequest();
+
             var exists = await _userRepository.ExistsAsync(form);
             if (exists)
                 return ServiceResult.AlreadyExists();
 
-            var appUser = UserFactory.ToEntity(form);
+            var imageFileUri = await _fileHandler.UploadFileAsync(form.ImageFile!);
+            var appUser = imageFileUri is null 
+                ? UserFactory.ToEntity(form) 
+                : UserFactory.ToEntity(form, imageFileUri);
 
             if (appUser is not null)
             {
@@ -92,7 +106,7 @@ namespace Authentication.Services
                 var standardPassword = _configuration["PW:Standard"]!;
 
                 var result = await _userManager.CreateAsync(appUser, standardPassword);
-                if(!result.Succeeded)
+                if (!result.Succeeded)
                     return ServiceResult.Failed();
 
                 var roleResult = await _roleHandler.AddToRoleAsync(appUser, form.Role);
@@ -118,6 +132,9 @@ namespace Authentication.Services
         
         public async Task<ServiceResult<AppUserDto>> GetUserByIdAsync(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                    return ServiceResult<AppUserDto>.BadRequest(new AppUserDto(), "Invalid field(s)");
+
             AppUserDto appUserDto = new();
 
             if (_cache.TryGetValue(_cacheKey_All, out IEnumerable<AppUserDto>? cachedItems))
@@ -137,11 +154,19 @@ namespace Authentication.Services
 
         public async Task<ServiceResult<IdentityResult>> UpdateUserAsync(EditAppUserForm formData)
         {
+            if (formData is null)
+                return ServiceResult<IdentityResult>.BadRequest(new IdentityResult(), "Invalid field(s)");
+
             var appUser = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == formData.Id);
             if (appUser is null)
                 return ServiceResult<IdentityResult>.NotFound(new IdentityResult(),"User not found.");
 
-            var updatedUser = UserFactory.UpdateEntity(formData, appUser);
+            var imageFileUri = await _fileHandler.UploadFileAsync(formData.ImageFile!);
+
+            var updatedUser = imageFileUri is null 
+                ? UserFactory.UpdateEntity(formData, appUser) 
+                : UserFactory.UpdateEntity(formData, appUser, imageFileUri);
+
             if (updatedUser is null)
                 return ServiceResult<IdentityResult>.Failed(new IdentityResult(), "Internal Server Error");
 
@@ -161,6 +186,9 @@ namespace Authentication.Services
 
         public async Task<ServiceResult<IdentityResult>> DeleteUserAsync(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return ServiceResult<IdentityResult>.BadRequest(new IdentityResult(), "Invalid field(s)");
+
             var appUser = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Id == id);
             if (appUser is null)
                 return ServiceResult<IdentityResult>.Failed(new IdentityResult(), "Could not get user by Id");
