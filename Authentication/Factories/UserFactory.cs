@@ -67,6 +67,7 @@ namespace Authentication.Factories
                 ImageName = appUser.ImageName,
                 JobTitle = appUser.JobTitle,
                 PhoneNumber = appUser.PhoneNumber,
+                Email = appUser.Email,
                 Role = role,
                 Address = appUser.Address.Address,
                 PostalCode = appUser.Address.PostalCode,
