@@ -65,25 +65,29 @@ namespace Authentication.Services
             if (!result.Succeeded)
                 return ServiceResult<AppUserDto>.UnAuthorized(new AppUserDto(), "Username or password is incorrect");
 
-            var user = await _userManager.FindByEmailAsync(form.Email);
-            if (user is null)
+            var userCheck = await _userManager.FindByEmailAsync(form.Email);
+            if (userCheck is null)
                 return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not found");
 
-            var userRole = await _roleHandler.GetRoleAsync(user!);
+            var userRole = await _roleHandler.GetRoleAsync(userCheck!);
             if (userRole is null)
                 return ServiceResult<AppUserDto>.Failed(new AppUserDto(), "An unexpected error occured");
 
             string adminApiKey = string.Empty;
 
-            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var isAdmin = await _userManager.IsInRoleAsync(userCheck, "Admin");
             if (isAdmin)
             {
                 adminApiKey = _configuration["SecretKeys:Admin"]!;
             }
 
-            var token = _tokenHandler.GenerateToken(user!, userRole);
+            var token = _tokenHandler.GenerateToken(userCheck!, userRole);
 
-            var userDto = UserFactory.ToModel(user, userRole);
+            var userResult = await GetUserByIdAsync(userCheck.Id);
+            if (!userResult.Succeeded)
+                return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not found");
+
+            var userDto = userResult.Result;
 
             return (userDto is not null)
                 ? ServiceResult<AppUserDto>.SignInOk(userDto, token, isAdmin, adminApiKey)
