@@ -41,8 +41,14 @@
         public static ServiceResult<T> Ok(T result, string? message) =>
             new() { Succeeded = true, StatusCode = 200, Message = message, Result = result };
 
+        public static ServiceResult<T> SignInOk( T result, string? token = null, bool? isAdmin = null, string? adminApiKey = null, string? message = null) =>
+            new() { Succeeded = true, StatusCode = 200, Token = token, IsAdmin = isAdmin, AdminApiKey = adminApiKey, Message = message, Result = result };
+
         public static ServiceResult<T> BadRequest(T result, string? message) =>
-            new() { Succeeded = false, StatusCode = 400, Message = message };
+            new() { Succeeded = false, StatusCode = 400, Message = message, Result = result };
+
+        public static ServiceResult<T> UnAuthorized(T result, string? message) =>
+            new() { Succeeded = false, StatusCode = 401, Message = message, Result = result };
 
         public static ServiceResult<T> NotFound(T result, string? message) =>
             new() { Succeeded = false, StatusCode = 404, Message = message, Result = result};

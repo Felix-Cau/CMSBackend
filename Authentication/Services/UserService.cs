@@ -56,22 +56,22 @@ namespace Authentication.Services
             return ServiceResult.Failed();
         }
 
-        public async Task<ServiceResult> SignInAsync(SignInForm form)
+        public async Task<ServiceResult<AppUserDto>> SignInAsync(SignInForm form)
         {
             if (form is null)
-                return ServiceResult.BadRequest();
+                return ServiceResult<AppUserDto>.BadRequest(new AppUserDto(), "Invalid field(s)");
 
             var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, false, false);
             if (!result.Succeeded)
-                return ServiceResult.UnAuthorized();
+                return ServiceResult<AppUserDto>.UnAuthorized(new AppUserDto(), "Username or password is incorrect");
 
             var user = await _userManager.FindByEmailAsync(form.Email);
             if (user is null)
-                return ServiceResult.NotFound();
+                return ServiceResult<AppUserDto>.NotFound(new AppUserDto(), "Not found");
 
             var userRole = await _roleHandler.GetRoleAsync(user!);
             if (userRole is null)
-                return ServiceResult.Failed();
+                return ServiceResult<AppUserDto>.Failed(new AppUserDto(), "An unexpected error occured");
 
             string adminApiKey = string.Empty;
 
@@ -83,7 +83,11 @@ namespace Authentication.Services
 
             var token = _tokenHandler.GenerateToken(user!, userRole);
 
-            return ServiceResult.AuthOk(token, isAdmin, adminApiKey);
+            var userDto = UserFactory.ToModel(user, userRole);
+
+            return (userDto is not null)
+                ? ServiceResult<AppUserDto>.SignInOk(userDto, token, isAdmin, adminApiKey)
+                : ServiceResult<AppUserDto>.Failed(new AppUserDto(), "An unexpected error occured");
         }
 
         public async Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form)

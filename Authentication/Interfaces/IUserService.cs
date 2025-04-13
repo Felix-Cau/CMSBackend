@@ -8,7 +8,7 @@ namespace Authentication.Interfaces
     {
         Task<ServiceResult> SignUpAsync(SignUpForm form);
 
-        Task<ServiceResult> SignInAsync(SignInForm form);
+        Task<ServiceResult<AppUserDto>> SignInAsync(SignInForm form);
 
         Task<ServiceResult> CreateUserAsAdminAsync(NewAppUserForm form);
 
