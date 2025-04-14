@@ -132,7 +132,7 @@ builder.Services.AddAuthentication(x =>
         var audience = builder.Configuration["Jwt:Audience"]!;
 
         //Change this for production
-        x.RequireHttpsMetadata = false;
+        x.RequireHttpsMetadata = true;
         //SaveToken är för identity.
         //x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
@@ -145,8 +145,8 @@ builder.Services.AddAuthentication(x =>
             ValidateIssuer = true,
             ValidIssuer = issuer,
             //Change this for production
-            ValidateAudience = false,
-            //ValidAudience = audience
+            ValidateAudience = true,
+            ValidAudience = audience
         };
     });
 
