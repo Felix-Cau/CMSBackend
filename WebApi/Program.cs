@@ -19,6 +19,7 @@ using System.Text;
 using Domain.Handlers;
 using Domain.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
+using WebApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -132,7 +133,7 @@ builder.Services.AddAuthentication(x =>
         var audience = builder.Configuration["Jwt:Audience"]!;
 
         //Change this for production
-        x.RequireHttpsMetadata = true;
+        x.RequireHttpsMetadata = false;
         //SaveToken är för identity.
         //x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
