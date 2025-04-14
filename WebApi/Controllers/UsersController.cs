@@ -178,12 +178,5 @@ namespace WebApi.Controllers
                 _ => BadRequest()
             };
         }
-
-        [HttpGet("signout")]
-        public async Task<IActionResult> Signout()
-        {
-            await _signInManager.SignOutAsync();
-            return Ok();
-        }
     }
 }

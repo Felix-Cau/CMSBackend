@@ -133,6 +133,7 @@ builder.Services.AddAuthentication(x =>
 
         //Change this for production
         x.RequireHttpsMetadata = false;
+        //SaveToken är för identity.
         //x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
         {
